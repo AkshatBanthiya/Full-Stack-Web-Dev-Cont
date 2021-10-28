@@ -1,9 +1,23 @@
-const express = require("express")
-const database=require('./database/db')
-const app=express()
+
+const express = require('express')
+const app = express()
+const categoryRoutes = require('./routes/categoryRoutes')
+
+
 
 app.use(express.json())
+//  http://3001/mercedes/Route
+app.use('/category', categoryRoutes)
 
-app.listen(3001, ()=>{
-    console.log("LISTENING AT PORT 3001")
+app.get('/', (req, res) => {
+    try {
+        console.log(document)
+    } catch (error) {
+        res.status(203).send(error.message)
+    }
+})
+
+
+app.listen(3001, () => {
+    console.log("Listening at PORT 3001")
 })
