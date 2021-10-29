@@ -3,16 +3,22 @@ const express = require('express')
 const router = express.Router()
 const { v4: uuidv4 } = require('uuid');
 
+/*
+ROUTE: http://localhost:3001/category/all
+METHOD: GET
+*/
+
 router.get('/all', (req, res) => {
 
     try {
-        res.status(200).json({
+        res.json({
             categories: database.categories,
             message: "Successfully fetched categories",
             status: "SUCCESS"
         })
     } catch (error) {
-        res.status(200).json({
+        console.log(error)
+        res.json({
             categories: [],
             message: error.message,
             status: "FAILED"
@@ -21,30 +27,76 @@ router.get('/all', (req, res) => {
 
 })
 
-
+/*
+ROUTE: http://localhost:3001/category/add
+METHOD: POST
+*/
 router.post('/add', (req, res) => {
+    const { name } = req.body
+    const newCategory = {
+        id: uuidv4(),
+        name
+    }
+
     try {
-        const { name } = req.body
+        let includes = database.categories.find(item => item.name === name)
+        if (!includes) database.categories.push(newCategory)
 
-        let newCategory = {
-            name,
-            id: uuidv4()
-        }
-
-        database.categories.push(newCategory)
-
-        res.status(200).json({
-            categories: categories,
-            message: error.message,
+        else console.log('Already exists')
+        res.json({
+            categories: database.categories,
+            message: "Successfully added category",
             status: "SUCCESS"
         })
     } catch (error) {
-        res.status(200).json({
+        console.log(error)
+        res.json({
+            categories: [],
+            message: error.message,
+            status: "FAILED"
+        })
+    }
+
+})
+
+
+/*
+ROUTE: http://localhost:3001/category/delete/:id
+METHOD: DELETE
+*/
+
+router.delete('/delete/:id', (req, res) => {
+    try {
+
+
+        const { id } = req.params
+        // let element = database.categories.find(item => item.id === id)
+        // const index = database.categories.indexOf(element)
+        // database.categories.splice(index,1)
+
+        const newCategories = database.categories.filter(item => item.id !== id)
+        database.categories = newCategories
+        console.log(newCategories)
+
+        res.json({
+            categories: newCategories,
+            message: "Successfully removed category",
+            status: "SUCCESS"
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
             categories: [],
             message: error.message,
             status: "FAILED"
         })
     }
 })
+
+
+/*
+ROUTE: http://localhost:3001/category/update/:id
+METHOD: PUT
+*/
 
 module.exports = router

@@ -1,21 +1,12 @@
-
 const express = require('express')
 const app = express()
-const categoryRoutes = require('./routes/categoryRoutes')
-
-
-
+const category_Routes = require('./routes/categoryRoutes')
+const productRoutes = require('./routes/productRoutes')
 app.use(express.json())
-//  http://3001/mercedes/Route
-app.use('/category', categoryRoutes)
 
-app.get('/', (req, res) => {
-    try {
-        console.log(document)
-    } catch (error) {
-        res.status(203).send(error.message)
-    }
-})
+
+app.use('/category', category_Routes)
+app.use('/products', productRoutes)
 
 
 app.listen(3001, () => {
